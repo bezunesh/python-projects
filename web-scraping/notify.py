@@ -12,7 +12,7 @@ def sendEmail(available_dates):
 
         server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-        subject = 'Python email test'
+        subject = 'DMV appointment for motor driving Test'
         body = f'Currently available dates: \n{available_dates}'
         msg = f'Subject: {subject}\n\n{body}'
 

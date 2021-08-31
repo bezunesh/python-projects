@@ -6,7 +6,8 @@ import time
 import notify
 
 def getAppointmentDates():
-    urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5776807'
+    # Stafford  Garsionville DMV
+    urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5101548'
     print(urlpage)
 
     driver = webdriver.Firefox()
@@ -27,5 +28,5 @@ def getAppointmentDates():
 
 if __name__ == '__main__':
     available_dates = getAppointmentDates()
-    if available_dates is not None:
+    if available_dates:
        notify.sendEmail(available_dates)
