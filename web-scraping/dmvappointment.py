@@ -4,24 +4,28 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 import pandas as pd
-from . import notify
+import smtplib
 
-# stafford - 874 Garisonville Road
-urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5776807'
-print(urlpage)
+def checkAppointment():
+    urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5776807'
+    print(urlpage)
 
-driver = webdriver.Firefox()
-# get web page
-driver.get(urlpage)
-time.sleep(15)
+    driver = webdriver.Firefox()
+    # get web page
+    driver.get(urlpage)
+    time.sleep(15)
 
-results = driver.find_elements_by_xpath("//*[@class='calendar']//*[@class='calendar-date-row']//*[@class='scheduleday  activeday']")
-print('Number of results', len(results))
+    results = driver.find_elements_by_xpath("//*[@class='calendar']//*[@class='scheduleday  activeday']")
+    print('Number of results', len(results))
 
-if(len(results) >= 1):
-    # send notification
-    print("Available dates: ")
-    # loop over results
-    for result in results:
-        calendar_date = result.get_attribute("day")
-        print(calendar_date)
+    available_dates = []
+    if(len(results) >= 1):
+        for result in results:
+            calendar_date = result.get_attribute("day")
+            available_dates.append(calendar_date)
+        
+        email_text = "Available dates are: \n" + ', '.join(available_dates)
+        print(email_text)
+
+if __name__ == '__main__':
+    checkAppointment()
