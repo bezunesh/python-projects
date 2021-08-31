@@ -3,10 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
-import pandas as pd
-import smtplib
+import notify
 
-def checkAppointment():
+def getAppointmentDates():
     urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5776807'
     print(urlpage)
 
@@ -23,9 +22,10 @@ def checkAppointment():
         for result in results:
             calendar_date = result.get_attribute("day")
             available_dates.append(calendar_date)
-        
-        email_text = "Available dates are: \n" + ', '.join(available_dates)
-        print(email_text)
+    
+    return available_dates
 
 if __name__ == '__main__':
-    checkAppointment()
+    available_dates = getAppointmentDates()
+    if available_dates is not None:
+       notify.sendEmail(available_dates)

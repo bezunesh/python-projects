@@ -1,16 +1,21 @@
+import os
 import smtplib
 
-def sendEmail(bodytext=""):
-    sender = "zueb21@gmail.com"
-    receiver = "bezunesh.terkik@gmail.com"
+EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
+EMAIL_PASSWORD = os.environ.get('EMAIL_PWD')
 
-    message = f"""\
-    Subject: Hi Mailtrap
-    To: {receiver}
-    From: {sender}
+def sendEmail(available_dates):
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
 
-    {bodytext}."""
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-    with smtplib.SMTP("smtp.mailtrap.io", 2525) as server:
-        server.login("97d022cd946b62", "35eff720fc6223")
-        server.sendmail(sender, receiver, message)
+        subject = 'Python email test'
+        body = f'Currently available dates: \n{available_dates}'
+        msg = f'Subject: {subject}\n\n{body}'
+
+        server.sendmail(EMAIL_ADDRESS, EMAIL_ADDRESS, msg)
+        
+        print('Email sent successfully.')
