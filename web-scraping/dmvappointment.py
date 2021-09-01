@@ -4,10 +4,12 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 import notify
+import schedule
 
 def getAppointmentDates():
     # Stafford  Garsionville DMV
-    urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5101548'
+    #urlpage =  'https://vadmvappointments.as.me/schedule.php?calendarID=5101548'
+    urlpage = 'https://vadmvappointments.as.me/schedule.php?calendarID=5101548'
     print(urlpage)
 
     driver = webdriver.Firefox()
@@ -24,9 +26,12 @@ def getAppointmentDates():
             calendar_date = result.get_attribute("day")
             available_dates.append(calendar_date)
     
-    return available_dates
+    if available_dates:
+        notify.sendEmail(available_dates)
+    
 
 if __name__ == '__main__':
-    available_dates = getAppointmentDates()
-    if available_dates:
-       notify.sendEmail(available_dates)
+    schedule.every(2).minutes.do(getAppointmentDates)
+ 
+    while True:
+        schedule.run_pending()
