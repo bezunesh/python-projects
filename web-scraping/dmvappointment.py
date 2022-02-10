@@ -15,7 +15,7 @@ def getAppointmentDates():
     driver = webdriver.Firefox()
     # get web page
     driver.get(urlpage)
-    time.sleep(15)
+    time.sleep(5)
 
     results = driver.find_elements_by_xpath("//*[@class='calendar']//*[@class='scheduleday  activeday']")
     print('Number of results', len(results))
@@ -31,7 +31,7 @@ def getAppointmentDates():
     
 
 if __name__ == '__main__':
-    schedule.every(2).minutes.do(getAppointmentDates)
+    schedule.every(10).minutes.do(getAppointmentDates)
  
     while True:
         schedule.run_pending()
