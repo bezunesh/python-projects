@@ -1,7 +1,7 @@
 from random import choice
 
 class SecretSanta:
-    players = ["Fred", "Wilma", "Barney"]
+    players = ["Bezu", "Jhon", "Alexis", "Tom", "Barney"]
     out = []
 
     def pickSanta(self, player):
