@@ -11,9 +11,9 @@ The Rules of the Game
 """
 
 from random import choice
+import pandas as pd
 
 words = ["lucky", "green", "thick"]
-
 class AmharicWordle:
 
     def __init__(self):
@@ -32,7 +32,11 @@ class AmharicWordle:
 
     def get_user_input(self):
         guess = input("Guess a 5 letter word: ")
+        self.trials.append(list(guess))
         return guess
+    
+    def remaining_trials(self):
+         return [list("_"*5) for i in range(self.no_of_trials - len(self.trials))]    
     
     def end(self, status):
         self.game_over = status
@@ -63,34 +67,27 @@ class AmharicWordle:
 
         return greens, oranges, grays
 
-
-    def board(self, word="", r=0):
-        # prints 5X6 board
-        self.trials.append(list(word))
-        for trial in self.trials:
-            print("\n")
-            for letter in trial:
-                print(letter, "\t", end="") 
+    def table(self):
+        data = self.trials + self.remaining_trials()
+        df = pd.DataFrame(data=data)
+        print(df)
+    
+    def run_main(self):
+        print(self.set_word_of_the_day())
+        i = 0
+        while i < self.no_of_trials:
+            guess = self.get_user_input()
+            self.table()
+            green, orange, gray = self.set_colors(guess)
+            if len(green) == self.length_of_word: 
+                print("You Won", self.word_of_the_day, " is the word.")
+                self.end(True)
+                break
+            i += 1
             
-        # fill the remaining rows blank
-        for row in range(self.no_of_trials-len(self.trials)):  
-                print("\n", "__\t"*self.length_of_word)
-            
+        if not self.game_over:
+            print("You lost", self.word_of_the_day, " is the word.")
 
 if __name__ == '__main__':
     game = AmharicWordle()
-    print(game.set_word_of_the_day())
-  
-    i = 0
-    while i < game.no_of_trials:
-        guess = game.get_user_input()
-        game.board(guess, i)
-        green, orange, gray = game.set_colors(guess)
-        if len(green) == game.length_of_word: 
-            print("You Won", game.word_of_the_day, " is the word.")
-            game.end(True)
-            break
-        i += 1
-    
-    if not game.game_over:
-        print("You lost", game.word_of_the_day, " is the word.")
+    game.run_main()
