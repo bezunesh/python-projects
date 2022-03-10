@@ -15,32 +15,44 @@ from random import choice
 words = ["lucky", "green", "thick"]
 
 class AmharicWordle:
-    word_of_the_day = ""
+    word_of_the_day = []
     game_over = False
 
     def set_word_of_the_day(self):
         """
         Set word of the day
         """ 
-        self.word_of_the_day = choice(words)
+        self.word_of_the_day = list(choice(words))
         return self.word_of_the_day
 
     def get_user_input(self):
         guess = input("Guess a 5 letter word: ")
         return guess
     
-    def check(self, word):
-        if self.word_of_the_day == word:
-            self.game_over = True
-            print("You got it.", self.word_of_the_day, " is the word.")
-        else:
-            zipped = zip(word, self.word_of_the_day)
-            for x, y in zipped:
-                if x == y:
-                    print("Green ", x, y)
-                elif x in self.word_of_the_day:
-                    print("Orange ", x)
-            
+    def set_colors(self, guess):
+        greens = []
+        oranges = []
+        grays = []
+
+        zipped = list(zip(guess, self.word_of_the_day, range(5)))
+        greens = [i for x, y, i in zipped if x == y]
+
+        # so that they remeber their position
+        guess = list(zip(guess, range(5)))
+
+        # remove the greens
+        guess = list(filter(lambda x: x[1] not in greens, guess))
+        word_of_the_day = list(filter(lambda x: x[0] not in greens, list(enumerate(self.word_of_the_day))))
+
+        word_of_the_day = [letter for index, letter in word_of_the_day]
+        for letter, index in guess:
+            if letter in word_of_the_day:
+                oranges.append(index)
+                # update 
+                word_of_the_day.remove(letter)
+            else:
+                grays.append(index) 
+
 
 if __name__ == '__main__':
     game = AmharicWordle()
@@ -49,7 +61,7 @@ if __name__ == '__main__':
     i = 0
     while not game.game_over and i < 6:
         guess = game.get_user_input()
-        game.check(guess)
+        game.set_colors(guess)
         i += 1
     
     if not game.game_over:
