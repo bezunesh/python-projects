@@ -1,3 +1,3 @@
-# Python playground
+# Python projects
 
-A repository for all kinds of python related exercises that I do. 
+A repository for all kinds of personal python projects. 
