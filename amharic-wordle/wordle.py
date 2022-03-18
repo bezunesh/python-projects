@@ -30,11 +30,6 @@ class AmharicWordle:
         words = ["lucky", "green", "thick"]
         self.word_of_the_day = list(choice(words))
         return self.word_of_the_day
-
-    def get_user_input(self):
-        # todo: check for length of word
-        guess = input("Guess a 5 letter word: ")
-        return guess
     
     def remaining_attempts(self):
         remaining = self.chances - len(self.attempts)
@@ -90,7 +85,7 @@ class AmharicWordle:
             self.attempts.append(list(guess))
 
             greens, oranges, grays = self.set_colors(guess)
-            data = self.attempts + self.remaining_trials()
+            data = self.attempts + self.remaining_attempts()
             df = pd.DataFrame(data=data)
 
             s = df.style.apply(self.highight, axis=None,
