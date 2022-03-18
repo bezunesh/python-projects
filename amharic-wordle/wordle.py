@@ -13,32 +13,34 @@ from random import choice
 import pandas as pd
 from IPython.display import display
 
-words = ["lucky", "green", "thick"]
 class AmharicWordle:
     style_df = None
     
     def __init__(self):
         self.word_of_the_day = []
         self.length_of_word = 5
-        self.trials = []
-        self.no_of_trials = 6
+        self.attempts = []
+        self.chances = 6
         self.game_over = False
         AmharicWordle.style_df = pd.DataFrame('', index=[0,1,2,3,4,5], 
             columns=[0,1,2,3,4])
 
     def set_word_of_the_day(self):
+        #TODO: load a data file and get a random word form it
+        words = ["lucky", "green", "thick"]
         self.word_of_the_day = list(choice(words))
         return self.word_of_the_day
 
     def get_user_input(self):
+        # todo: check for length of word
         guess = input("Guess a 5 letter word: ")
-        self.trials.append(list(guess))
         return guess
     
-    def remaining_trials(self):
-         return [list("_"*5) for i in range(self.no_of_trials - len(self.trials))]    
+    def remaining_attempts(self):
+        remaining = self.chances - len(self.attempts)
+        return [list("_"*5) for i in range(remaining)]    
     
-    def end(self, status):
+    def end_game(self, status):
         self.game_over = status
     
     def set_colors(self, guess):
@@ -83,10 +85,12 @@ class AmharicWordle:
         self.set_word_of_the_day()
         i = 0
         
-        while i < self.no_of_trials:
-            guess = self.get_user_input()
+        while i < self.chances:
+            guess = input("Guess a 5 letter word: ")
+            self.attempts.append(list(guess))
+
             greens, oranges, grays = self.set_colors(guess)
-            data = self.trials + self.remaining_trials()
+            data = self.attempts + self.remaining_trials()
             df = pd.DataFrame(data=data)
 
             s = df.style.apply(self.highight, axis=None,
@@ -95,7 +99,7 @@ class AmharicWordle:
 
             if len(greens) == self.length_of_word: 
                 print("You Won", self.word_of_the_day, " is the word.")
-                self.end(True)
+                self.end_game(True)
                 break
             i += 1
         if not self.game_over:
