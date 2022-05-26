@@ -1,0 +1,34 @@
+1. Resource: randomly select amharic word from a file storage
+2. API Endpoint  GET /wordoftheday  Get word of the day
+3. Data interchange format - JSON
+4. Request example
+    GET /wordoftheday HTTP/1.1
+    Host: www.rateth.com/api
+5. Success Response - format json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    ...
+
+    {
+        'wordoftheday': 'selam'
+    }
+6. Error Response
+    - Request for non existing request
+
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    ...
+
+    {
+        "error": "The requested resource was not found."
+    }
+
+
+    HTTP/1.1 400 Bad Request
+    Content-Type: application/json
+
+    {
+        "error": "This request was not properly formatted. Please send again."
+    }
+    - HTTP/1.1 415 Unsupported Media Type
+    
