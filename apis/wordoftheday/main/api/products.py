@@ -1,3 +1,5 @@
+from pathlib import Path
+
 class Product:
     def __init__(self, title, price, description, image, category):
         self.title = title
