@@ -30,10 +30,13 @@ class EcommerceApi:
                 return parsed_python_obj    
         except HTTPError as e:
             print(e)
+            raise e
         except URLError as e:
             print(e)
+            raise e
         except json.JSONDecodeError as e:
             print(e)
+            raise e
     
     def getProducts(self, limit=10, sort='asc') -> str:
         path = "/products"
@@ -118,8 +121,9 @@ def getAllCategories():
     
 
 if __name__ == '__main__':
+    getAllCategories()
     # add new product
-    addProduct()
+    #addProduct()
     #updateProduct()
     #partialUpdateProduct(5)
     #deleteProduct(7)

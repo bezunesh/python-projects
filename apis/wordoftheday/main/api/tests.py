@@ -1,7 +1,10 @@
-import unittest
+import unittest, io
 from unittest import TestCase
 from unittest.mock import patch
 from urllib.parse import quote
+from urllib import request
+from urllib.error import HTTPError, URLError
+from http.client import HTTPResponse
 import certifi, ssl, json
 from fakestoreapi import EcommerceApi
 from products import Product
@@ -87,5 +90,24 @@ class ApiTestCase(TestCase):
         self.api.deleteProduct(id)
         mock_sendRequest.assert_called_with('/products/9', method='DELETE')
 
+    def test_sendRequest(self):
+        url = "https://fakestoreapi.com/categories"
+        # getCatagories
+        # a .read() supporting text/binary file, returning bytes of JSON document 
+        fp = io.BytesIO(b'["clothing", "jewelery", "perfumes"]')
+        with patch('urllib.request.urlopen', return_value = fp) as mock_urlopen:
+            result = self.api.sendRequest("/categories") 
+            #mock_urlopen.assert_called_with(requestObj, context=self.api.context)
+            self.assertIsInstance(result, list)
+            self.assertEqual(result, ["clothing", "jewelery", "perfumes"])
+
+    def test_sendRequestRaisesExceptions(self):
+        # non existing path
+        path = "/category"
+        self.assertRaises(HTTPError, self.api.sendRequest, path)
+        # wrong url
+        self.api.api_url = "http://fakestoreapi.co"
+        self.assertRaises(URLError, self.api.sendRequest, '/categories')
+       
 if __name__ == '__main__':
     unittest.main()
